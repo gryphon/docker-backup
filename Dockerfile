@@ -1,28 +1,25 @@
 # Base image:
-FROM trashtravel/docker-rails:latest
+FROM alpine:latest
 
-# RUN apt-get update -qq && apt-get install -y build-essential libpq-dev 
-RUN apk --update add make g++ mariadb-dev tzdata
+RUN apk add --no-cache duplicity lftp librsync \
+ && apk add --no-cache py-boto py-paramiko py2-pip py-cryptography ca-certificates \
+ && apk add --no-cache py-cffi \
+ && apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing py-netifaces  \
+ && pip install pyrax b2 dropbox && rm -r /root/.cache
 
-RUN mkdir -p /cashier
+#COPY b2backend.py /usr/lib/python2.7/site-packages/duplicity/backends/b2backend.py
+#RUN  python -m compileall /usr/lib/python2.7/site-packages/duplicity/backends/b2backend.py
+#VOLUME /root/.cache/duplicity /tmp
 
-WORKDIR /cashier
+ADD . /backup
 
-ADD Gemfile /cashier/Gemfile
-ADD Gemfile.lock /cashier/Gemfile.lock
+WORKDIR /backup
 
-RUN bundle install
+#ENTRYPOINT /backup/entrypoint.sh
 
-ADD package.json /cashier/package.json
-ADD package-lock.json /cashier/package-lock.json
+#COPY ./myawesomescript /usr/local/bin/myawesomescript
+# Run the cron every minute
 
-RUN yarn install
+RUN echo "*  *  *  *  *    /backup/test.sh > /dev/stdout" > /etc/crontabs/root
 
-ADD . /cashier
-
-RUN RAILS_ENV=production bundle exec rake assets:precompile
-
-RUN rm -rf /cashier/tmp/* /cashier/log/*
-
-# This is because base image is setting this - needs to be fixed in image
-RUN unset VERSION
+CMD crond -l 2 -f

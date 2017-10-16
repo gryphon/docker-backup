@@ -1,12 +1,11 @@
 #!/bin/bash
 
 DATE=`date +%Y-%m-%d-%H-%M-%S`
-ARCHIVE=${DATE}.sql.gz.enc
+ARCHIVE=${DATE}.sql
 BACKUP_DIR=./backups
 DATABASE=cashier_development
-PUBLIC_KEY=keys/mysqldump-key.pub.pem
+BUCKET=kit-backups
 
-mysqldump --host=db --user=root --password=root ${DATABASE} \
-  | gzip -c \
-  | openssl smime -encrypt -binary -text -aes256 -out ${BACKUP_DIR}/${ARCHIVE} -outform DER ${PUBLIC_KEY}
-  
+mysqldump --host=db --user=root --password=root ${DATABASE} > ${BACKUP_DIR}/${ARCHIVE}
+
+duplicity --encrypt-key ${GPG_PUBLIC_KEY} ${BACKUP_DIR} b2://${ACCOUNT}:${APPLICATION_KEY}@${BUCKET}

@@ -1,1 +1,5 @@
-openssl req -x509 -nodes -newkey rsa:2048 -keyout keys/mysqldump-key.priv.pem -out keys/mysqldump-key.pub.pem
+#!/bin/sh
+# This generates your GPG public and private keys
+# Use never expiring key for backups
+
+gpg --full-generate-key
