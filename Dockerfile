@@ -1,25 +1,21 @@
 # Base image:
-FROM alpine:latest
+FROM golang:1.8-alpine
 
-RUN apk add --no-cache duplicity lftp librsync \
- && apk add --no-cache py-boto py-paramiko py2-pip py-cryptography ca-certificates \
- && apk add --no-cache py-cffi \
- && apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing py-netifaces  \
- && pip install pyrax b2 dropbox && rm -r /root/.cache
+RUN echo http://nl.alpinelinux.org/alpine/v3.4/community >> /etc/apk/repositories
+RUN apk add --no-cache mysql-client openssl git nfs-utils openssh fuse
 
-#COPY b2backend.py /usr/lib/python2.7/site-packages/duplicity/backends/b2backend.py
-#RUN  python -m compileall /usr/lib/python2.7/site-packages/duplicity/backends/b2backend.py
-#VOLUME /root/.cache/duplicity /tmp
+RUN git clone https://github.com/restic/restic \
+  && cd restic \
+  && go run build.go \
+  && cp restic /usr/local/bin/
+RUN apk del git
 
 ADD . /backup
 
 WORKDIR /backup
 
-#ENTRYPOINT /backup/entrypoint.sh
+RUN mkdir -p /backup/backups
 
-#COPY ./myawesomescript /usr/local/bin/myawesomescript
-# Run the cron every minute
-
-RUN echo "*  *  *  *  *    /backup/test.sh > /dev/stdout" > /etc/crontabs/root
+RUN echo "*  3  *  *  *    /backup/backup.sh > /dev/stdout" > /etc/crontabs/root
 
 CMD crond -l 2 -f
