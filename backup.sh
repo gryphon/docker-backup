@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ARCHIVE=database.sql
-BACKUP_DIR=./backups
+BACKUP_DIR=/backup/backups
 
 # MYSQL
 

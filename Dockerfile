@@ -16,6 +16,6 @@ WORKDIR /backup
 
 RUN mkdir -p /backup/backups
 
-RUN echo "*  3  *  *  *    /backup/backup.sh > /dev/stdout" > /etc/crontabs/root
+RUN echo "0  3  *  *  *    /backup/backup.sh > /dev/stdout" > /etc/crontabs/root
 
 CMD crond -l 2 -f
