@@ -1,6 +1,6 @@
 #!/bin/sh
 
-docker service create --name="backup" \
+docker service create --rm --name="backup" \
   --mount type=bind,source=`pwd`,target=/backup \
   --secret b2_account --secret b2_application_key \
   --secret backup_password \
