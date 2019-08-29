@@ -4,8 +4,10 @@
 
 You will need the following secrets to be set:
 
-* `b2_account` - backblaze account id
-* `b2_application_key` - backblaze app key
+* `b2_account` - backblaze account id (if using b2)
+* `b2_application_key` - backblaze app key (if using b2)
+* `s3_key` - s3 key (if using s3)
+* `b2_secret` - s3 secret (if using s3)
 * `backup_password` - password to encrypt data
 * `backup_repository` - repository to backup data
   
