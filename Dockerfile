@@ -1,5 +1,5 @@
 # Base image:
-FROM golang:1.9-alpine
+FROM golang:1.11-alpine
 
 RUN echo http://nl.alpinelinux.org/alpine/v3.4/community >> /etc/apk/repositories
 RUN apk add --no-cache mysql-client openssl git nfs-utils openssh fuse
