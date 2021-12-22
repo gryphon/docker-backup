@@ -1,10 +1,10 @@
 # Base image:
-FROM golang:1.11-alpine
+FROM golang:1.18-alpine
 
 RUN echo http://nl.alpinelinux.org/alpine/v3.4/community >> /etc/apk/repositories
 RUN apk add --no-cache mysql-client openssl git nfs-utils openssh fuse
 
-RUN git clone https://github.com/restic/restic \
+RUN git clone --branch v0.12.1 https://github.com/restic/restic \
   && cd restic \
   && go run build.go \
   && cp restic /usr/local/bin/
