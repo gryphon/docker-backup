@@ -7,6 +7,7 @@ BACKUP_DIR=/backup/backups
 
 [ -f /run/secrets/backup_db_params ] && export DB_PARAMS=$(cat /run/secrets/backup_db_params)
 
+mkdir -p ${BACKUP_DIR}
 echo "Backing up database to ${BACKUP_DIR}/${ARCHIVE}"
 
 # --host=${DB_HOST} --user=${DB_USER} --password=${DB_PASSWORD} ${DATABASE}
