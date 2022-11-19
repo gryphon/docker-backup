@@ -5,25 +5,20 @@ BACKUP_DIR=/backup/backups
 
 # MYSQL
 
-DATABASE=$(cat /run/secrets/backup_db_name);
-DB_USER=$(cat /run/secrets/backup_db_user);
-DB_PASSWORD=$(cat /run/secrets/backup_db_password);
-DB_HOST=db
+[ -f /run/secrets/backup_db_params ] && export DB_PARAMS=$(cat /run/secrets/backup_db_params)
 
 echo "Backing up database to ${BACKUP_DIR}/${ARCHIVE}"
 
-mysqldump --host=${DB_HOST} --user=${DB_USER} --password=${DB_PASSWORD} ${DATABASE} > ${BACKUP_DIR}/${ARCHIVE}
+# --host=${DB_HOST} --user=${DB_USER} --password=${DB_PASSWORD} ${DATABASE}
+mysqldump ${DB_PARAMS} > ${BACKUP_DIR}/${ARCHIVE}
 
 # RESTIC
 
-export B2_ACCOUNT_ID=$(cat /run/secrets/b2_account 2>/dev/null);
-export B2_ACCOUNT_KEY=$(cat /run/secrets/b2_application_key 2>/dev/null);
+[ -f /run/secrets/backup_s3_key ] && export AWS_ACCESS_KEY_ID=$(cat /run/secrets/backup_s3_key)
+[ -f /run/secrets/backup_s3_secret ] && export AWS_SECRET_ACCESS_KEY=$(cat /run/secrets/backup_s3_secret)
 
-export AWS_ACCESS_KEY_ID=$(cat /run/secrets/s3_key 2>/dev/null)
-export AWS_SECRET_ACCESS_KEY=$(cat /run/secrets/s3_secret 2>/dev/null)
-
-export RESTIC_REPOSITORY=$(cat /run/secrets/backup_repository);
-export RESTIC_PASSWORD=$(cat /run/secrets/backup_password);
+[ -f /run/secrets/backup_repository ] && export RESTIC_REPOSITORY=$(cat /run/secrets/backup_repository);
+[ -f /run/secrets/backup_password ] && export RESTIC_PASSWORD=$(cat /run/secrets/backup_password);
 
 echo "Backing up ${BACKUP_DIR} to ${RESTIC_REPOSITORY}"
 
