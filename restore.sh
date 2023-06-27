@@ -13,8 +13,8 @@ snapshot=$1
 [ -f /run/secrets/backup_repository ] && export RESTIC_REPOSITORY=$(cat /run/secrets/backup_repository);
 [ -f /run/secrets/backup_password ] && export RESTIC_PASSWORD=$(cat /run/secrets/backup_password);
 
-echo "Restoring ${snapshot} to /backup/restored"
+echo "Restoring ${snapshot} to /restored"
 
-restic restore $snapshot --target /backup/restored
+restic restore $snapshot --target /restored
 
 echo "Restoring done"

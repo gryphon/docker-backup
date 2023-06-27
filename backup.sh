@@ -3,6 +3,11 @@
 ARCHIVE=database.sql
 BACKUP_DIR=/backup/backups
 
+if [[ -n "$SKIP_BACKUP" ]]; then
+    echo "Backup is skipped due to ENV settings" 1>&2
+    exit 1
+fi
+
 # MYSQL
 
 [ -f /run/secrets/backup_db_params ] && export DB_PARAMS=$(cat /run/secrets/backup_db_params)

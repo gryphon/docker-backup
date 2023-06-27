@@ -18,6 +18,12 @@ You will need the following secrets to be set:
 * `backup_db_user` - mysql user
 * `backup_db_password` - mysql password
 
+Also possible to use as ENV vars (see backup.sh)
+
+Additional ENVs:
+
+* `SKIP_BACKUP` - dry-run backup (usable for restoring-only). Set to non-empty
+
 ## Restoring
 
 * Run `snapshots.sh` within container to list all snapshots
